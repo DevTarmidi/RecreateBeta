@@ -56,12 +56,12 @@
                     <div class="row mt-1">
                         <h3>New Project</h3><hr/>
                         <div id="layout" class="text-left" style="width:90%;" align="center">
-                            <a href="main.html">
+                            <a href="<?php echo site_url(); ?>workspace/new/400/300">
                                 <div id="400p" class="col-lg-3 text-center" style="width:100px; height:75px; background-color:#fff; margin:2px;">
                                     400x300
-                                </div>
+                                </div> 
                             </a>
-                            <a href="main.html?w=800&h=450">
+                            <a href="<?php echo site_url(); ?>workspace/new/800/450">
                                 <div id="800p" class="col-lg-3 text-center" style="width:200px; height:112px; background-color:#fff; margin:2px;">
                                     800x450
                                 </div>

@@ -58,18 +58,17 @@
 				font-size: 17px;
 			}
 			img.zoom {
-    width: 350px;
-    height: 200px;
     -webkit-transition: all .2s ease-in-out;
     -moz-transition: all .2s ease-in-out;
     -o-transition: all .2s ease-in-out;
     -ms-transition: all .2s ease-in-out;
 }
 .transisi {
-    -webkit-transform: scale(1.8); 
-    -moz-transform: scale(1.8);
-    -o-transform: scale(1.8);
-    transform: scale(1.8);
+    -webkit-transform: scale(1.5); 
+    -moz-transform: scale(1.5);
+    -o-transform: scale(1.5);
+    transform: scale(1.5);
+		z-index:10;
 }
 			/* Change background color of buttons on hover */
 			div.tab button:hover {
@@ -96,11 +95,6 @@
 			{
 				width: 110px;
 				margin: 2px;
-			}
-			.draggable
-			{
-				filter: alpha(opacity=60);
-				opacity: 0.6;
 			}
 			.dropped
 			{

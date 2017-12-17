@@ -1,4 +1,3 @@
-    <div style="width:100%;height:75%;" >
 		<div class="row" style="width:100%; height:100%">
 		  <div class="text-center" style="background-color:inherit; width:30%; height:100%;">
 		    <div class="tab">
@@ -52,13 +51,12 @@
 	</div>
 	
           </div>
-		  <div id="canvas" class="text-center" style="width:70%;z-index: -1;">
-			<div id="dvDest" style="width:595px; height:842px; background-color:white; overflow : none; position: absolute; top: 20%; left: 43%;z-index: 0;">
-				
+		  <div id="canvas" class="text-center" style="width:70%;z-index: 0; overflow:auto;">
+			<div id="dvDest" style="width:<?php echo $w; ?>px; height:<?php echo $h; ?>px; background-color:white; overflow : none;z-index: 0; margin:auto; position:relative; top: <?php echo (550-$h)/2 ?>px;">
+				<img id="kla1" src="<?php echo base_url(); ?>images/Koala.jpg" style="position:absolute;" />
 			</div>
 		  </div>
 		</div>
-    </div>
     <script>
 			
 $(document).ready(function(){
@@ -71,24 +69,52 @@ $(document).ready(function(){
 		document.getElementById("defaultOpen").click();
 		$(function () {
 				
-							$("#dvSource img").draggable({
-									drag: function (event, ui) {
-											ui.helper.addClass("draggable");
-									}
-							}),
-							$("#dvDest").droppable({
-									drop: function (event, ui) {
-										if ($("#dvDest img").length == 0) {
-												$("#dvDest").html("");
-										}
-										ui.draggable.addClass("dropped");										
-										ui.draggable.removeClass("draggable");
-										$(ui.draggable).clone().appendTo($(this));
-									}	
-							}),
-							$( "#sortable" ).sortable();
-							$( "#sortable" ).disableSelection();
-					});
+					$("#dvSource img").draggable({
+							drag: function (event, ui) {
+									ui.helper.addClass("draggable");
+							}
+					}),
+					$("#dvDest").droppable({
+							drop: function (event, ui) {
+								if ($("#dvDest img").length == 0) {
+										$("#dvDest").html("");
+								}
+								ui.draggable.addClass("dropped");										
+								ui.draggable.removeClass("draggable");
+								$(ui.draggable).clone().appendTo($(this));
+							}	
+					}),
+					$( "#sortable" ).sortable();
+					$( "#sortable" ).disableSelection();
+			});
+			var kla1 = document.getElementById("kla1");
+			var moving = false;
+			kla1.addEventListener("mousedown", initialClick, false);
+			function move(e){
+
+				var newX = e.clientX - 10;
+				var newY = e.clientY - 10;
+
+				image.style.left = newX + "px";
+				image.style.top = newY + "px";
+
+				
+			}
+
+			function initialClick(e) {
+
+				if(moving){
+					document.removeEventListener("mousemove", move);
+					moving = !moving;
+					return;
+				}
+				
+				moving = !moving;
+				image = this;
+
+				document.addEventListener("mousemove", move, false);
+
+			}
 		function openCity(evt, cityName) {
 			var i, tabcontent, tablinks;
 			tabcontent = document.getElementsByClassName("tabcontent");
