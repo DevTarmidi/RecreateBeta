@@ -14,9 +14,9 @@
 			  </div>
 			</div>
 		  </form>
-		  <div id="dvSource" class="mt-1" style="height:100%; width:100%; overflow : auto; background-color:white;z-index:2;">
-				<img id="Koala" class="zoom" src="<?php echo base_url(); ?>images/Koala.jpg" />
-				<img id="Koala" class="zoom" src="<?php echo base_url(); ?>images/layout/layout_1.jpg" />
+		  <div id="dvSource" class="mt-1" style="height:88%; width:100%; overflow : auto; background-color:white;z-index:2;">
+				<img id="Koala1" class="zoom" src="<?php echo base_url(); ?>images/Koala.jpg" onclick="initialClick(this.id)" />
+				<img id="Gliders1" class="zoom" src="<?php echo base_url(); ?>images/layout/layout_1.jpg" onclick="initialClick(this.id)" />
 		  </div>
 		</div>
 		<div id="teks" class="tabcontent">
@@ -51,9 +51,9 @@
 	</div>
 	
           </div>
-		  <div id="canvas" class="text-center" style="width:70%;z-index: 0; overflow:auto;">
-			<div id="dvDest" style="width:<?php echo $w; ?>px; height:<?php echo $h; ?>px; background-color:white; overflow : none;z-index: 0; margin:auto; position:relative; top: <?php echo (550-$h)/2 ?>px;">
-				<img id="kla1" src="<?php echo base_url(); ?>images/Koala.jpg" style="position:absolute;" />
+		  <div id="canvas" class="text-left" style="width:70%;z-index: 0; overflow:auto;">
+			<div id="dvDest" style="width:<?php echo $w; ?>px; height:<?php echo $h; ?>px; background-color:white; overflow : none;z-index: 0; margin:auto; position:relative; top: <?php echo (550-$h)/2 ?>px;padding:0;">
+				
 			</div>
 		  </div>
 		</div>
@@ -68,7 +68,6 @@ $(document).ready(function(){
 });  
 		document.getElementById("defaultOpen").click();
 		$(function () {
-				
 					$("#dvSource img").draggable({
 							drag: function (event, ui) {
 									ui.helper.addClass("draggable");
@@ -79,41 +78,62 @@ $(document).ready(function(){
 								if ($("#dvDest img").length == 0) {
 										$("#dvDest").html("");
 								}
-								ui.draggable.addClass("dropped");										
+								ui.draggable.addClass("dropped");
 								ui.draggable.removeClass("draggable");
 								$(ui.draggable).clone().appendTo($(this));
-							}	
+								var a = ui.draggable.attr('id');
+								var b = parseInt(a.replace(/[^0-9]/g, ''))+1;
+								var c = a.replace(/[0-9]/g, '');
+								ui.draggable.attr('id', c+(b.toString()));
+								$("#"+a).attr('id', a+"_");
+								remClass(a+"_");
+							}
 					}),
 					$( "#sortable" ).sortable();
 					$( "#sortable" ).disableSelection();
 			});
-			var kla1 = document.getElementById("kla1");
 			var moving = false;
-			kla1.addEventListener("mousedown", initialClick, false);
-			function move(e){
-
-				var newX = e.clientX - 10;
-				var newY = e.clientY - 10;
-
-				image.style.left = newX + "px";
-				image.style.top = newY + "px";
-
-				
+			var posx;
+			var posy;
+			var oposx;
+			var oposy;
+			var idx="";
+			function remClass(id){
+				document.getElementById(id).className="";
 			}
 
-			function initialClick(e) {
+			function move(e){
+				var newX = oposx + (e.clientX - posx);
+				var newY = oposy + (e.clientY - posy);
+				var kla1 = document.getElementById(idx);
+				kla1.style.left = newX.toString() + "px";
+				kla1.style.top = newY.toString() + "px";				
+			}
 
-				if(moving){
-					document.removeEventListener("mousemove", move);
-					moving = !moving;
-					return;
+			function initialClick(id) {
+				e = window.event;
+				idx = id;
+				if(idx.indexOf("_") != -1){
+					if(moving){
+						document.removeEventListener("mousemove", move);
+						moving = !moving;
+						idx = "";
+					}else{
+						var kla1 = document.getElementById(idx);
+						if (kla1.style.top.length==0 || kla1.style.left.length==0){
+							oposx = 0;
+							oposy = 0;
+						}else{
+							oposx = parseInt(kla1.style.left.replace(/[^0-9]/g, ''));;
+							oposy = parseInt(kla1.style.top.replace(/[^0-9]/g, ''));;
+						}
+						posx = e.clientX;
+						posy = e.clientY;
+						moving = !moving;
+						image = this;
+						document.addEventListener("mousemove", move, false);
+					}
 				}
-				
-				moving = !moving;
-				image = this;
-
-				document.addEventListener("mousemove", move, false);
-
 			}
 		function openCity(evt, cityName) {
 			var i, tabcontent, tablinks;
