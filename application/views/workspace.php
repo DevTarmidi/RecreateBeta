@@ -15,8 +15,17 @@
 			</div>
 		  </form>
 		  <div id="dvSource" class="mt-1" style="height:88%; width:100%; overflow : auto; background-color:white;z-index:2;">
-				<img id="Koala1" class="zoom" src="<?php echo base_url(); ?>images/Koala.jpg" onclick="initialClick(this.id)" />
 				<img id="Gliders1" class="zoom" src="<?php echo base_url(); ?>images/layout/layout_1.jpg" onclick="initialClick(this.id)" />
+				<img id="Gliders2" class="zoom" src="<?php echo base_url(); ?>images/layout/layout_2.jpg" onclick="initialClick(this.id)" />
+				<img id="Gliders3" class="zoom" src="<?php echo base_url(); ?>images/layout/layout_3.jpg" onclick="initialClick(this.id)" />
+				<img id="Gliders4" class="zoom" src="<?php echo base_url(); ?>images/Icon/icon_1.jpg" onclick="initialClick(this.id)" />
+				<img id="Gliders5" class="zoom" src="<?php echo base_url(); ?>images/Icon/icon_2.png" onclick="initialClick(this.id)" />
+				<img id="Gliders6" class="zoom" src="<?php echo base_url(); ?>images/Icon/icon_3.png" onclick="initialClick(this.id)" />
+				<img id="Gliders7" class="zoom" src="<?php echo base_url(); ?>images/Icon/icon_4.png" onclick="initialClick(this.id)" />
+				<img id="Gliders8" class="zoom" src="<?php echo base_url(); ?>images/Icon/icon_5.png" onclick="initialClick(this.id)" />
+				<img id="Gliders9" class="zoom" src="<?php echo base_url(); ?>images/Icon/icon_6.jpg" onclick="initialClick(this.id)" />
+				<img id="Gliders10" class="zoom" src="<?php echo base_url(); ?>images/Icon/icon_7.png" onclick="initialClick(this.id)" />
+				
 		  </div>
 		</div>
 		<div id="teks" class="tabcontent">
@@ -27,7 +36,7 @@
 					<option value="Century Gothic" style="font-family:'Century Gothic';">Century Gothic</option>
 					<option value="Engravers Gothic BT" style="font-family:'Engravers Gothic BT';">Engravers Gothic BT</option>
 				</select>
-			</div>
+			</div>	
 			<div class="navbar-form mt-2">
 				<div class="input-group">
 					<input type="number" min=1 id="fsize" class="form-control" style="width:	30%;" value=20 onchange="changeSize()" oninput="validity.valid||(value='');">
@@ -36,7 +45,12 @@
 					<input type="color" id="ocolorp" class="form-control" style="width:20%; height:40px" value="#000000" onchange="clickColorO()">
 				</div>
 			</div>
-			<div id="textID" class="text-center mt-2" contenteditable="true" style="border:1px; height:'40px'; font-size:20px; font-family:'Arial'; color:#000000;-webkit-text-stroke:0px #000000;">
+			<div class="navbar-form mt-2">
+				<div class="input-group">
+				<input type="text" id="tinput" class="form-control" oninput="changeT()" placeholder="">
+				</div>
+			</div>
+			<div id="textID" class="text-center mt-2" style="border:1px; height:'40px'; font-size:20px; font-family:'Arial'; color:#000000;-webkit-text-stroke:0px #000000;">
 				Your Text Here
 			</div>
 		</div>
@@ -52,7 +66,7 @@
 	
           </div>
 		  <div id="canvas" class="text-left" style="width:70%;z-index: 0; overflow:auto;">
-			<div id="dvDest" style="width:<?php echo $w; ?>px; height:<?php echo $h; ?>px; background-color:white; overflow : none;z-index: 0; margin:auto; position:relative; top: <?php echo (550-$h)/2 ?>px;padding:0;">
+			<div id="dvDest" style="width:<?php echo $w; ?>px; height:<?php echo $h; ?>px; background-color:white; overflow : hidden;z-index: 0; margin:auto; position:relative; top: <?php echo (550-$h)/2 ?>px;padding:0;">
 				
 			</div>
 		  </div>
@@ -69,6 +83,11 @@ $(document).ready(function(){
 		document.getElementById("defaultOpen").click();
 		$(function () {
 					$("#dvSource img").draggable({
+							drag: function (event, ui) {
+									ui.helper.addClass("draggable");
+							}
+					}),
+					$("#textID").draggable({
 							drag: function (event, ui) {
 									ui.helper.addClass("draggable");
 							}
@@ -92,10 +111,7 @@ $(document).ready(function(){
 					$( "#sortable" ).sortable();
 					$( "#sortable" ).disableSelection();
 			});
-			var moving = false;
-			var scaling = false;
-			var kratio = false;
-			var rotating = false;
+			var moving =  scaling =  kratio =  rotating =  transping = false;
 			var posx;
 			var posy;
 			var oposx;
@@ -104,8 +120,12 @@ $(document).ready(function(){
 			var width;
 			var height;
 			var rotate;
+			var opacy;
 			function remClass(id){
 				document.getElementById(id).className="";
+			}
+			function changeT(){
+				document.getElementById("textID").innerHTML=document.getElementById("tinput").value;
 			}
 			function ikey(e){
 				if (e.charCode==83 || e.charCode==115) {
@@ -116,6 +136,7 @@ $(document).ready(function(){
 					}else{
 						scaling = true;
 						rotating = false;
+						transping = false;
 					}
 				}else if(e.charCode==114){
 					if(rotating){
@@ -124,9 +145,21 @@ $(document).ready(function(){
 					}else{
 						rotating = true;
 						scaling = false;
+						transping = false;
 					}
 				}else if(e.charCode==82){
 					document.getElementById(idx).style.transform = "rotate(0deg)";
+				}else if(e.charCode==111){
+					if(transping){
+						transping = false;
+						document.getElementById(idx).click();
+					}else{
+						transping = true;
+						rotating = false;
+						scaling = false;
+					}
+				}else if(e.charCode==79){
+					document.getElementById(idx).style.opacity=1.0;
 				}
 				if (e.charCode==83){
 					kratio = true;
@@ -153,6 +186,11 @@ $(document).ready(function(){
 					var deg;
 					deg = rotate+(e.clientY - posy);
 					kla1.style.transform = "rotate("+deg+"deg)";
+				}else if(transping){
+					var op;
+					op = opacy+((posy-e.clientY)/100);
+					op = (op>1)?1:(op<0)?0:op;
+					kla1.style.opacity = op;
 				}else{
 					var newX = oposx + (e.clientX - posx);
 					var newY = oposy + (e.clientY - posy);
@@ -171,23 +209,33 @@ $(document).ready(function(){
 						moving = !moving;
 						scaling = false;
 						kratio = false;
+						transping = false;
+						rotating = false;
 						idx = "";
 					}else{
 						if (kla1.style.top.length==0 || kla1.style.left.length==0){
 							oposx = 0;
 							oposy = 0;
 						}else{
-							oposx = parseInt(kla1.style.left.replace(/[^0-9]/g, ''));;
-							oposy = parseInt(kla1.style.top.replace(/[^0-9]/g, ''));;
+							oposx = parseInt(kla1.style.left.replace(/[^0-9]/g, ''));
+							oposy = parseInt(kla1.style.top.replace(/[^0-9]/g, ''));
+							if (kla1.style.left.indexOf("-") == 0){
+								oposx *= -1;
+							}
+							if (kla1.style.top.indexOf("-") == 0){
+								oposy *= -1;
+							}
 						}
 						var trans = document.getElementById(idx).style.transform;
-						rotate = (trans.length ==0)?0:parseInt(trans.replace(/[^0-9]/g, ''));;
+						var opa = document.getElementById(idx).style.opacity;
+						rotate = (trans.length ==0)?0:parseInt(trans.replace(/[^0-9]/g, ''));
 						posx = e.clientX;
 						posy = e.clientY;
 						moving = !moving;
 						image = this;
 						width = kla1.width;
 						height = kla1.height;
+						opacy = (opa.length == 0)?1.0:opa;
 						document.addEventListener("keypress", ikey, false);
 						document.addEventListener("mousemove", move, false);
 					}
